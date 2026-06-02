@@ -359,4 +359,4 @@ Possible future improvements:
 
 # Acknowledgment
 
-This project was completed as part of the CodeAlpha Machine Learning Internship using the RAVDESS Emotional Speech Audio dataset.
+This project was completed using the RAVDESS Emotional Speech Audio dataset.
