@@ -169,13 +169,13 @@ The final model is a CNN-based classifier with:
 ![Model Accuracy](accuracy_curve.png)
 
 ### Loss Curve
-![Model Loss](images/loss_curve.png)
+![Model Loss](loss_curve.png)
 
 ### Confusion Matrix
-![Confusion Matrix](images/confusion_matrix.png)
+![Confusion Matrix](confusion_matrix.png)
 
 ### Normalized Confusion Matrix
-![Normalized Confusion Matrix](images/normalized_confusion_matrix.png)
+![Normalized Confusion Matrix](normalized_confusion_matrix.png)
 
 ### Classification Report Snapshot
 ![Classification Report](images/classification_report.png)
