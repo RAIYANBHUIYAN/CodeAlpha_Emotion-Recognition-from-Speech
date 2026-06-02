@@ -2,28 +2,35 @@
 
 Speech Emotion Recognition (SER) system built on the **RAVDESS Emotional Speech Audio** dataset for the CodeAlpha Machine Learning internship task.
 
-## Project Overview
+---
 
-This project predicts human emotions from speech audio using a deep learning pipeline.  
+# Project Overview
+
+This project predicts human emotions from speech audio using a deep learning pipeline.
+
 The workflow includes:
 
-- audio loading and preprocessing
-- MFCC, delta, and delta-delta feature extraction
-- data augmentation
+- Audio loading and preprocessing
+- MFCC, Delta, and Delta-Delta feature extraction
+- Data augmentation
 - CNN-based classification
-- focal loss and class balancing
-- evaluation using accuracy, precision, recall, F1-score, and confusion matrix
+- Focal loss and class balancing
+- Evaluation using Accuracy, Precision, Recall, F1-score, and Confusion Matrix
 
-## Dataset
+---
+
+# Dataset
 
 The project uses the **RAVDESS Emotional Speech Audio** dataset.
 
-### Dataset highlights
-- **24 actors**
-- **1440 speech audio files**
-- **8 emotion classes**
+## Dataset Highlights
 
-### Emotion labels
+- **24 Actors**
+- **1440 Speech Audio Files**
+- **8 Emotion Classes**
+
+## Emotion Labels
+
 - angry
 - calm
 - disgust
@@ -33,18 +40,18 @@ The project uses the **RAVDESS Emotional Speech Audio** dataset.
 - sad
 - surprised
 
-### File naming convention
+## File Naming Convention
 
-RAVDESS files follow a structured filename format such as:
+RAVDESS files follow a structured filename format:
 
 ```text
 03-01-05-01-02-01-12.wav
 ```
 
-The third field indicates the emotion code:
+The third field represents the emotion label.
 
 | Code | Emotion |
-|------|---------|
+|------|----------|
 | 01 | neutral |
 | 02 | calm |
 | 03 | happy |
@@ -54,104 +61,158 @@ The third field indicates the emotion code:
 | 07 | disgust |
 | 08 | surprised |
 
-## Methodology
+---
 
-### 1) Audio preprocessing
-Each audio file is loaded with Librosa, using a fixed duration and offset so that all clips are processed consistently.
+# Methodology
 
-### 2) Feature extraction
-For each audio sample, the model extracts:
+## 1) Audio Preprocessing
 
-- **MFCC** (Mel-Frequency Cepstral Coefficients)
-- **Delta MFCC** (first-order temporal derivative)
-- **Delta-Delta MFCC** (second-order temporal derivative)
+Each audio file is loaded using Librosa with:
+- fixed duration
+- fixed offset
+- consistent sampling
+
+This ensures all speech samples are processed uniformly.
+
+---
+
+## 2) Feature Extraction
+
+The model extracts:
+
+- MFCC (Mel-Frequency Cepstral Coefficients)
+- Delta MFCC
+- Delta-Delta MFCC
 
 If the MFCC matrix is represented as:
 
-\[
+```math
 X \in \mathbb{R}^{40 \times T}
-\]
+```
 
 then the final feature tensor becomes:
 
-\[
-\mathbf{F} = \text{stack}(X, \Delta X, \Delta^2 X) \in \mathbb{R}^{40 \times 173 \times 3}
-\]
+```math
+\mathbf{F} = \text{stack}(X,\Delta X,\Delta^2 X) \in \mathbb{R}^{40 \times 173 \times 3}
+```
 
-where:
-- \(40\) = number of MFCC coefficients
-- \(173\) = fixed time dimension after padding/truncation
-- \(3\) = channels for MFCC, delta, and delta-delta
+Where:
 
-### 3) Normalization
-Features are standardized using the training statistics:
+- **40** = number of MFCC coefficients
+- **173** = fixed time dimension after padding/truncation
+- **3** = channels for MFCC, Delta, and Delta-Delta
 
-\[
+---
+
+## 3) Normalization
+
+Features are standardized using training statistics:
+
+```math
 F' = \frac{F - \mu}{\sigma + \epsilon}
-\]
+```
 
-where:
-- \(\mu\) = training mean
-- \(\sigma\) = training standard deviation
-- \(\epsilon\) prevents division by zero
+Where:
 
-### 4) Data augmentation
-To improve generalization, the training set is expanded with audio augmentation such as:
-- additive noise
-- time shift
-- pitch shift
-- time stretching
+- **μ** = training mean
+- **σ** = training standard deviation
+- **ε** = prevents division by zero
 
-### 5) Model architecture
-A convolutional neural network is used to learn emotion patterns from the feature maps.
+---
 
-### 6) Loss function
-The model uses **categorical focal loss** with label smoothing.
+## 4) Data Augmentation
 
-For class probability \(p_t\), focal loss is:
+To improve model generalization, augmentation techniques are applied:
 
-\[
-\mathcal{L}_{\text{focal}} = - \alpha (1 - p_t)^\gamma \log(p_t)
-\]
+- Additive noise
+- Time shifting
+- Pitch shifting
+- Time stretching
 
-where:
-- \(\alpha\) balances class importance
-- \(\gamma\) focuses learning on hard examples
+This helps the model learn more robust emotional speech patterns.
 
-This helps the model pay more attention to difficult samples and minority-class errors.
+---
 
-## Pipeline
+## 5) Model Architecture
+
+A CNN-based architecture is used for emotion classification.
+
+The model contains:
+
+- Convolution layers
+- Batch normalization
+- Max pooling
+- Dropout regularization
+- Global average pooling
+- Dense classification layers
+
+CNNs are highly effective for learning local time-frequency patterns from spectrogram-like audio representations.
+
+---
+
+## 6) Loss Function
+
+The model uses **Categorical Focal Loss** with label smoothing.
+
+For class probability \( p_t \), focal loss is:
+
+```math
+\mathcal{L}_{\text{focal}} = -\alpha (1-p_t)^\gamma \log(p_t)
+```
+
+Where:
+
+- **α** balances class importance
+- **γ** focuses learning on hard examples
+
+This allows the model to focus more on difficult and minority-class samples.
+
+---
+
+# Pipeline
 
 1. Load dataset paths and labels  
 2. Encode emotion classes  
 3. Split data into train, validation, and test sets  
-4. Extract MFCC + delta + delta-delta features  
-5. Apply augmentation on training data  
-6. Normalize using training statistics  
-7. Train a CNN model with focal loss  
-8. Evaluate using classification metrics  
-9. Save model, label map, and normalization stats  
-10. Run single-file emotion prediction
+4. Extract MFCC + Delta + Delta-Delta features  
+5. Apply data augmentation  
+6. Normalize features using training statistics  
+7. Train CNN model with focal loss  
+8. Evaluate model performance  
+9. Save trained model and label mappings  
+10. Run single-file emotion prediction  
 
-## Model Summary
+---
 
-The final model is a CNN-based classifier with:
-- convolution blocks
-- batch normalization
-- max pooling
-- dropout
-- global average pooling
-- dense classification head
+# Model Summary
 
-## Results
+The final model is a CNN-based classifier optimized for speech emotion recognition.
 
-### Final test metrics
-- **Accuracy:** 0.8576
-- **Precision:** 0.8664
-- **Recall:** 0.8539
-- **F1-score:** 0.8486
+Key components:
 
-### Per-class performance snapshot
+- CNN feature extractor
+- Batch normalization
+- Dropout regularization
+- Global average pooling
+- Dense classification head
+
+---
+
+# Results
+
+## Final Test Metrics
+
+| Metric | Score |
+|--------|--------|
+| Accuracy | 0.8576 |
+| Precision | 0.8664 |
+| Recall | 0.8539 |
+| F1-score | 0.8486 |
+
+---
+
+## Per-Class Performance
+
 | Emotion | Precision | Recall | F1-score |
 |---------|-----------|--------|----------|
 | angry | 0.9722 | 0.9211 | 0.9459 |
@@ -163,47 +224,71 @@ The final model is a CNN-based classifier with:
 | sad | 0.8750 | 0.5385 | 0.6667 |
 | surprised | 1.0000 | 0.8684 | 0.9296 |
 
-## Visual Results
+---
 
-### Accuracy Curve
-![Model Accuracy](accuracy_curve.png)
+# Visual Results
 
-### Loss Curve
-![Model Loss](loss_curve.png)
+## Accuracy Curve
 
-### Confusion Matrix
-![Confusion Matrix](confusion_matrix.png)
+![Accuracy Curve](images/accuracy_curve.png)
 
-### Normalized Confusion Matrix
-![Normalized Confusion Matrix](normalized_confusion_matrix.png)
+---
 
-### Classification Report Snapshot
+## Loss Curve
+
+![Loss Curve](images/loss_curve.png)
+
+---
+
+## Confusion Matrix
+
+![Confusion Matrix](images/confusion_matrix.png)
+
+---
+
+## Normalized Confusion Matrix
+
+![Normalized Confusion Matrix](images/normalized_confusion_matrix.png)
+
+---
+
+## Classification Report
+
 ![Classification Report](images/classification_report.png)
 
-## Interpretation
+---
 
-The confusion matrix shows strong recognition for:
+# Interpretation
+
+The model performs strongly on:
+
 - angry
 - fearful
 - disgust
 - surprised
 
-The most challenging classes are:
+More challenging emotions include:
+
 - calm
 - neutral
 - sad
 
-This is expected because these emotions have overlapping acoustic characteristics in speech.
+This is expected because these emotions share similar acoustic properties in human speech.
 
-## Files Included
+---
+
+# Project Structure
 
 ```text
+CodeAlpha_Emotion-Recognition-from-Speech/
+│
+├── notebook.ipynb
+├── README.md
 ├── emotion_recognition_best.keras
 ├── label_classes.json
 ├── train_mean.npy
 ├── train_std.npy
-├── notebook.ipynb
-├── README.md
+│
 └── images/
     ├── accuracy_curve.png
     ├── loss_curve.png
@@ -212,7 +297,9 @@ This is expected because these emotions have overlapping acoustic characteristic
     └── classification_report.png
 ```
 
-## Technologies Used
+---
+
+# Technologies Used
 
 - Python
 - TensorFlow / Keras
@@ -223,33 +310,53 @@ This is expected because these emotions have overlapping acoustic characteristic
 - Matplotlib
 - Seaborn
 
-## How to Run
+---
 
-1. Clone the repository
-2. Install dependencies
-3. Open the notebook
-4. Run all cells
-5. Test the trained model on a `.wav` file
+# How to Run
 
-## Dependencies
+## Clone Repository
+
+```bash
+git clone https://github.com/RAIYANBHUIYAN/CodeAlpha_Emotion-Recognition-from-Speech.git
+```
+
+## Install Dependencies
 
 ```bash
 pip install tensorflow librosa numpy pandas matplotlib seaborn scikit-learn
 ```
 
-## Future Improvements
+## Run Notebook
 
-Possible next steps:
-- CRNN (CNN + LSTM) architecture
-- transfer learning on audio embeddings
-- larger and more diverse speech datasets
-- real-time streamlit or flask demo
-- speaker-independent evaluation
+Open:
 
-## Author
+```text
+notebook.ipynb
+```
+
+Run all cells sequentially.
+
+---
+
+# Future Improvements
+
+Possible future improvements:
+
+- CRNN (CNN + LSTM)
+- Transformer-based audio models
+- Real-time emotion recognition
+- Streamlit deployment
+- Larger multilingual datasets
+- Speaker-independent testing
+
+---
+
+# Author
 
 **Md Raiyan Bhuiyan**
 
-## Acknowledgment
+---
 
-This project was completed as part of the CodeAlpha machine learning internship task using the RAVDESS emotional speech dataset.
+# Acknowledgment
+
+This project was completed as part of the CodeAlpha Machine Learning Internship using the RAVDESS Emotional Speech Audio dataset.
