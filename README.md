@@ -230,25 +230,25 @@ Key components:
 
 ## Accuracy Curve
 
-![Accuracy Curve](images/accuracy_curve.png)
+![Accuracy Curve](accuracy_curve.png)
 
 ---
 
 ## Loss Curve
 
-![Loss Curve](images/loss_curve.png)
+![Loss Curve](loss_curve.png)
 
 ---
 
 ## Confusion Matrix
 
-![Confusion Matrix](images/confusion_matrix.png)
+![Confusion Matrix](confusion_matrix.png)
 
 ---
 
 ## Normalized Confusion Matrix
 
-![Normalized Confusion Matrix](images/normalized_confusion_matrix.png)
+![Normalized Confusion Matrix](normalized_confusion_matrix.png)
 
 ---
 
