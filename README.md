@@ -166,7 +166,7 @@ The final model is a CNN-based classifier with:
 ## Visual Results
 
 ### Accuracy Curve
-![Model Accuracy](images/accuracy_curve.png)
+![Model Accuracy](accuracy_curve.png)
 
 ### Loss Curve
 ![Model Loss](images/loss_curve.png)
